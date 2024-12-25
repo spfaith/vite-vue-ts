@@ -1,4 +1,4 @@
-interface CongressMan<T> {
+interface CongressMan {
   ASSEM_ADDR: string
   BTH_DATE: string
   BTH_GBN_NM: string

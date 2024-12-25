@@ -11,9 +11,9 @@ import GridView from './views/GridView.vue'
 import router from './router'
 
 const viewType = ref([
-  { id: 'Grid', link: '/grid', comp: GridView },
-  { id: 'Slide', link: '/slide', comp: SlideView },
-  { id: 'Card', link: '/card', comp: CardView },
+  { id: 'Grid', link: '/grid', comp: 'grid' },
+  { id: 'Slide', link: '/slide', comp: 'slide' },
+  { id: 'Card', link: '/card', comp: 'card' },
 ])
 const onSelect = (view: {
   link: string | RouteLocationAsRelativeGeneric | RouteLocationAsPathGeneric
@@ -24,7 +24,7 @@ const onSelect = (view: {
 </script>
 
 <template>
-  <Navbar :viewType="viewType" @onSelect="(view) => onSelect" />
+  <Navbar :viewType="viewType" @onSelect="onSelect" />
   <RouterView />
 </template>
 

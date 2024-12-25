@@ -11,10 +11,10 @@ import Carousel from '@/components/Carousel.vue'
 import jsonData from '../assets/json/congressman'
 import { ref, onMounted, computed } from 'vue'
 import { getUserData } from '../api/api-get'
-
+import type { Congressman } from '@/types/congressman'
 const resultList = ref([...jsonData.resultList])
 const enemyList = ref([...jsonData.enemy])
-const allData = ref([])
+const allData = ref<Congressman[]>([])
 
 onMounted(async () => {
   allData.value = await getUserData()
@@ -26,11 +26,11 @@ onMounted(async () => {
   console.log(`onMounted enemyFilter : ${enemyFilter.value.length}`)
 })
 
-const getThumbImgUrl = (cgrs) => {
+const getThumbImgUrl = (cgrs: Congressman) => {
   return resultList.value.find((item) => item.hgNm === cgrs.HG_NM)?.mThumbImgUrl || ''
 }
 
-type IS_ENEMY = (a: object) => boolean
+type IS_ENEMY = (a: Congressman) => boolean
 const isEnemy: IS_ENEMY = (item) => {
   return jsonData.enemy.includes(item.HG_NM)
 }

@@ -13,7 +13,7 @@ import Card from '@/components/Card.vue'
 
 import jsonData from '../assets/json/congressman'
 import { getUserData } from '../api/api-get'
-
+import type { Congressman } from '@/types/congressman'
 // export default {
 //   name: 'CardView',
 //   data() {
@@ -46,13 +46,15 @@ import { getUserData } from '../api/api-get'
 //     },
 //   },
 // }
-const allData = ref([])
+const allData = ref<Congressman[]>([])
 const resultList = ref([...jsonData.resultList])
 const enemyList = ref([...jsonData.enemy])
 onMounted(async () => {
   allData.value = await getUserData()
-  allData.value = allData.value = allData.value.sort((a, b) => (a.HG_NM < b.HG_NM ? -1 : 1))
-  allData.value.forEach((data) => {
+  allData.value = allData.value.sort((a: Congressman, b: Congressman) =>
+    a.HG_NM < b.HG_NM ? -1 : 1,
+  )
+  allData.value.forEach((data: Congressman) => {
     data.imgUrl = getThumbImgUrl(data)
     data.enemy = isEnemy(data)
   })

@@ -6,7 +6,7 @@
       class="card"
       @click="onClickDetail(item)"
       :class="isEnemy(item) && 'enemy'"
-      :style="`background-color:${COLOR[item.POLY_NM]}`"
+      :style="`background-color:${COLOR[item.POLY_NM as keyof typeof COLOR]}`"
     >
       <div class="card-image">
         <img :src="`${URL.BASE_URL}${getThumbImgUrl(item)}`" :alt="item.HG_NM" />
@@ -26,32 +26,44 @@ import jsonData from '@/assets/json/congressman'
 import { ref, onMounted, computed } from 'vue'
 import { getUserData } from '@/api/api-get'
 import { URL, COLOR } from '@/constants/enum'
+import type { Congressman } from '@/types/congressman'
 
 const resultList = ref([...jsonData.resultList])
 const enemyList = ref([...jsonData.enemy])
-const allData = ref([])
+const allData = ref<Congressman[]>([])
 
 onMounted(async () => {
   allData.value = await getUserData()
-  allData.value = allData.value = allData.value.sort((a, b) => (a.HG_NM < b.HG_NM ? -1 : 1))
-  allData.value.forEach((data) => {
+  allData.value = allData.value = allData.value.sort((a: Congressman, b: Congressman) =>
+    a.HG_NM < b.HG_NM ? -1 : 1,
+  )
+  allData.value.forEach((data: Congressman) => {
     data.imgUrl = getThumbImgUrl(data)
     data.enemy = isEnemy(data)
   })
   console.log(`onMounted enemyFilter : ${enemyFilter.value.length}`)
 })
 
-const getThumbImgUrl = (cgrs) => {
+const getThumbImgUrl = (cgrs: Congressman) => {
   return resultList.value.find((item) => item.hgNm === cgrs.HG_NM)?.mThumbImgUrl || ''
 }
 
-// type IS_ENEMY = (a: object) => boolean
-const isEnemy: boolean = (item: object) => {
+const onClickDetail = (item: Congressman) => {
+  console.log(`onClickDetail ${item.HG_NM}, homepage : ${item.HOMEPAGE}`)
+  if (item.HOMEPAGE) {
+    console.log('window open')
+    window.open(item.HOMEPAGE, '_blank')
+  } else {
+    alert('No Home page!')
+  }
+}
+
+const isEnemy = (item: Congressman): boolean => {
   return jsonData.enemy.includes(item.HG_NM)
 }
 
 const enemyFilter = computed(() =>
-  allData.value.filter((cgrs) => enemyList.value.includes(cgrs.HG_NM)),
+  allData.value.filter((cgrs: Congressman) => enemyList.value.includes(cgrs.HG_NM)),
 )
 </script>
 

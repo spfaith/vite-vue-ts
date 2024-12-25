@@ -67,21 +67,21 @@ import { ref, onMounted, computed } from 'vue'
 import * as bootstrap from 'bootstrap'
 import data from '@/assets/json/congressman'
 import { getUserData } from '@/api/api-get'
-import { COLOR } from '@/constants/enum'
+import type { Congressman } from '@/types/congressman'
 
 const baseUrl = 'https://www.assembly.go.kr'
 const jsonDataList = ref([...data.resultList])
-const allDataList = ref([])
+const allDataList = ref<Congressman[]>([])
 
 // Interface for Slide with Icons
-interface Slide {
-  imageUrl: string
-  title: string
-  description: string
-  titleIcon: string
-  descriptionIcon: string
-  indicatorIcon: string
-}
+// interface Slide {
+//   imageUrl: string
+//   title: string
+//   description: string
+//   titleIcon: string
+//   descriptionIcon: string
+//   indicatorIcon: string
+// }
 
 // // Carousel Slides Data with Bootstrap Icons
 // const slides = ref<Slide[]>([
@@ -115,7 +115,9 @@ interface Slide {
 // Optional: Initialize carousel programmatically
 onMounted(async () => {
   allDataList.value = await getUserData()
-  allDataList.value = allDataList.value.sort((a, b) => (a.HG_NM < b.HG_NM ? -1 : 1))
+  allDataList.value = allDataList.value.sort((a: Congressman, b: Congressman) =>
+    a.HG_NM < b.HG_NM ? -1 : 1,
+  )
   console.log(`onMounted enemyFilter : ${enemyFilter.value.length}`)
   const carouselElement = document.querySelector('#imageCarousel')
   if (carouselElement) {
@@ -126,7 +128,7 @@ onMounted(async () => {
   }
 })
 
-const onClickDetail = (item) => {
+const onClickDetail = (item: Congressman) => {
   console.log(`onClickDetail ${item.HG_NM}, homepage : ${item.HOMEPAGE}`)
   if (item.HOMEPAGE) {
     console.log('window open')
@@ -135,12 +137,12 @@ const onClickDetail = (item) => {
     alert('No Home page!')
   }
 }
-const isEnemy = (item) => {
-  console.log(`${item.HG_NM} is enemy : ${data.enemy.includes(item.HG_NM)}`)
-  return data.enemy.includes(item.HG_NM)
-}
+// const isEnemy = (item: Congressman) => {
+//   console.log(`${item.HG_NM} is enemy : ${data.enemy.includes(item.HG_NM)}`)
+//   return data.enemy.includes(item.HG_NM)
+// }
 
-const getThumbImgUrl = (item) => {
+const getThumbImgUrl = (item: Congressman) => {
   const url = jsonDataList.value.find((data) => data.hgNm === item.HG_NM)?.mThumbImgUrl || ''
   console.log(`getThumbImgUrl item.HG_NM : ${item.HG_NM} url : ${url}`)
   return jsonDataList.value.find((data) => data.hgNm === item.HG_NM)?.mThumbImgUrl || ''

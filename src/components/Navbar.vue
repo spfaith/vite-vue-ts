@@ -8,7 +8,7 @@
           <BDropdownItem
             v-for="view in props.viewType"
             :replace="true"
-            :router-component-name="view.comp"
+            :to="{ name: view.comp }"
             :key="view.id"
             >{{ view.id }}</BDropdownItem
           >
